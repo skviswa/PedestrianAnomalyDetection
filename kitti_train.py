@@ -37,7 +37,7 @@ samples_per_epoch = 500
 N_seq_val = 100  # number of sequences to use for validation
 
 # Model parameters
-n_channels, im_height, im_width = (3, 128, 160)
+n_channels, im_height, im_width = (1, 128, 160)
 input_shape = (n_channels, im_height, im_width) if K.image_data_format() == 'channels_first' else (im_height, im_width, n_channels)
 stack_sizes = (n_channels, 48, 96, 192)
 R_stack_sizes = stack_sizes
