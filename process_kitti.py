@@ -20,9 +20,10 @@ if not os.path.exists(DATA_DIR):
     os.mkdir(DATA_DIR)
 
 def get_files(folder_name, subdir):
+    files = []
     for sd in subdir:
         path = os.path.join(DATA_DIR, sd, folder_name)
-        files = [i for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
+        files += [i for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
     return files
 
 def process_data(subdir):
@@ -33,9 +34,10 @@ def process_data(subdir):
         for folder in splits[split]:
             for sd in subdir:
                 im_dir = os.path.join(DATA_DIR, sd, split, folder)
-                files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
-                im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-                source_list += [folder] * len(files)
+                if os.path.exists(im_dir):
+                    files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
+                    im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
+                    source_list += [folder] * len(files)
         
         print( 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images')
         X = np.zeros((len(im_list),) + desired_im_sz + (1,), np.uint8)
