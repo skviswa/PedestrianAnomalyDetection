@@ -25,10 +25,10 @@ weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')  # where w
 json_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_model.json')
 
 # Data files
-train_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_train.hkl')
-train_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_train.hkl')
-val_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_val.hkl')
-val_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_val.hkl')
+train_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_Train.hkl')
+train_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Train.hkl')
+val_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_Val.hkl')
+val_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Val.hkl')
 
 # Training parameters
 nb_epoch = 5
