@@ -21,17 +21,17 @@ from kitti_settings import *
 
 
 save_model = True  # if weights will be saved
-weights_file = os.path.join(WEIGHTS_DIR, 'prednet_kitti_weights.hdf5')  # where weights will be saved
-json_file = os.path.join(WEIGHTS_DIR, 'prednet_kitti_model.json')
+weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')  # where weights will be saved
+json_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_model.json')
 
 # Data files
-train_file = os.path.join(DATA_DIR, 'X_train.hkl')
-train_sources = os.path.join(DATA_DIR, 'sources_train.hkl')
-val_file = os.path.join(DATA_DIR, 'X_val.hkl')
-val_sources = os.path.join(DATA_DIR, 'sources_val.hkl')
+train_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_train.hkl')
+train_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_train.hkl')
+val_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_val.hkl')
+val_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_val.hkl')
 
 # Training parameters
-nb_epoch = 150
+nb_epoch = 5
 batch_size = 4
 samples_per_epoch = 500
 N_seq_val = 100  # number of sequences to use for validation
@@ -69,7 +69,8 @@ val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_si
 lr_schedule = lambda epoch: 0.001 if epoch < 75 else 0.0001    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
-    if not os.path.exists(WEIGHTS_DIR): os.mkdir(WEIGHTS_DIR)
+    if not os.path.exists(WEIGHTS_DIR): 
+        os.mkdir(WEIGHTS_DIR)
     callbacks.append(ModelCheckpoint(filepath=weights_file, monitor='val_loss', save_best_only=True))
 
 history = model.fit_generator(train_generator, samples_per_epoch / batch_size, nb_epoch, callbacks=callbacks,
