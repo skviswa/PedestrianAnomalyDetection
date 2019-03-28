@@ -3,9 +3,9 @@ Code for downloading and processing KITTI data (Geiger et al. 2013, http://www.c
 '''
 
 import os
-import requests
-from bs4 import BeautifulSoup
-import urllib.request
+#import requests
+#from bs4 import BeautifulSoup
+#import urllib.request
 import numpy as np
 from imageio import imread
 from scipy.misc import imresize
@@ -20,12 +20,13 @@ if not os.path.exists(DATA_DIR):
     os.mkdir(DATA_DIR)
 
 def get_files(folder_name, subdir):
-    path = os.path.join(DATA_DIR, subdir, folder_name)
-    files = [i for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
+    for sd in subdir:
+        path = os.path.join(DATA_DIR, sd, folder_name)
+        files = [i for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
     return files
 
 def process_data(subdir):
-    splits = {s: get_files(s) for s in ['Train', 'Test', 'Val']}    
+    splits = {s: get_files(s, subdir) for s in ['Train', 'Test', 'Val']}    
     for split in splits:
         im_list = []
         source_list = []  # corresponds to recording that image came from
