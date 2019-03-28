@@ -16,33 +16,40 @@ import os
 desired_im_sz = (128, 160)
 
 
-if not os.path.exists(DATA_DIR): os.mkdir(DATA_DIR)
+if not os.path.exists(DATA_DIR):
+    os.mkdir(DATA_DIR)
 
-def get_files(folder_name):
-    path = os.path.join(DATA_DIR,'UCSDped1',folder_name)
+def get_files(folder_name, subdir):
+    path = os.path.join(DATA_DIR, subdir, folder_name)
     files = [i for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
     return files
 
-def process_data():
+def process_data(subdir):
     splits = {s: get_files(s) for s in ['Train', 'Test', 'Val']}    
     for split in splits:
         im_list = []
         source_list = []  # corresponds to recording that image came from
         for folder in splits[split]:
-            im_dir = os.path.join(DATA_DIR,'UCSDped1', split, folder)
-            files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
-            im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-            source_list += [folder] * len(files)
-
+            for sd in subdir:
+                im_dir = os.path.join(DATA_DIR, sd, split, folder)
+                files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
+                im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
+                source_list += [folder] * len(files)
+        
         print( 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images')
         X = np.zeros((len(im_list),) + desired_im_sz + (1,), np.uint8)
         for i, im_file in enumerate(im_list):
             im = imread(im_file)
             X[i] = process_im(im, desired_im_sz)
-        
-
-        hkl.dump(X, os.path.join(DATA_DIR, 'X_' + split + '.hkl'))
-        hkl.dump(source_list, os.path.join(DATA_DIR, 'sources_' + split + '.hkl'))
+            
+        if (len(subdir) == 1):        
+            hkl.dump(X, os.path.join(DATA_DIR, subdir[0], 'X_' + split + '.hkl'))
+            hkl.dump(source_list, os.path.join(DATA_DIR, subdir[0], 'sources_' + split + '.hkl'))
+        elif (len(subdir) == 2):
+            if not os.path.exists(os.path.join(DATA_DIR, 'total')):
+                os.mkdir(os.path.join(DATA_DIR, 'total'))
+            hkl.dump(X, os.path.join(DATA_DIR, 'total', 'X_' + split + '.hkl'))
+            hkl.dump(source_list, os.path.join(DATA_DIR, 'total', 'sources_' + split + '.hkl'))            
 
 
 # resize and crop image
@@ -55,4 +62,6 @@ def process_im(im, desired_sz):
 
 
 if __name__ == '__main__':
-    process_data()
+    process_data(['UCSDped1'])
+    process_data(['UCSDped2'])
+    process_data(['UCSDped1', 'UCSDped2'])
