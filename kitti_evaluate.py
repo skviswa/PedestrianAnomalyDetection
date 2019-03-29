@@ -24,10 +24,10 @@ n_plot = 40
 batch_size = 10
 nt = 10
 
-weights_file = os.path.join(WEIGHTS_DIR, 'tensorflow_weights/prednet_kitti_weights.hdf5')
-json_file = os.path.join(WEIGHTS_DIR, 'prednet_kitti_model.json')
-test_file = os.path.join(DATA_DIR, 'X_test.hkl')
-test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
+weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')
+json_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_model.json')
+test_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_test.hkl')
+test_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_test.hkl')
 
 # Load trained model
 f = open(json_file, 'r')
@@ -57,7 +57,8 @@ if data_format == 'channels_first':
 # Compare MSE of PredNet predictions vs. using last frame.  Write results to prediction_scores.txt
 mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
 mse_prev = np.mean( (X_test[:, :-1] - X_test[:, 1:])**2 )
-if not os.path.exists(RESULTS_SAVE_DIR): os.mkdir(RESULTS_SAVE_DIR)
+if not os.path.exists(RESULTS_SAVE_DIR): 
+    os.mkdir(RESULTS_SAVE_DIR)
 f = open(RESULTS_SAVE_DIR + 'prediction_scores.txt', 'w')
 f.write("Model MSE: %f\n" % mse_model)
 f.write("Previous Frame MSE: %f" % mse_prev)
@@ -69,7 +70,8 @@ plt.figure(figsize = (nt, 2*aspect_ratio))
 gs = gridspec.GridSpec(2, nt)
 gs.update(wspace=0., hspace=0.)
 plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
-if not os.path.exists(plot_save_dir): os.mkdir(plot_save_dir)
+if not os.path.exists(plot_save_dir): 
+    os.mkdir(plot_save_dir)
 plot_idx = np.random.permutation(X_test.shape[0])[:n_plot]
 for i in plot_idx:
     for t in range(nt):
