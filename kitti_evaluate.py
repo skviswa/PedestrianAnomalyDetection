@@ -65,25 +65,25 @@ f.write("Previous Frame MSE: %f" % mse_prev)
 f.close()
 
 # Plot some predictions
-aspect_ratio = float(X_hat.shape[2]) / X_hat.shape[3]
-plt.figure(figsize = (nt, 2*aspect_ratio))
-gs = gridspec.GridSpec(2, nt)
-gs.update(wspace=0., hspace=0.)
-plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
-if not os.path.exists(plot_save_dir): 
-    os.mkdir(plot_save_dir)
-plot_idx = np.random.permutation(X_test.shape[0])[:n_plot]
-for i in plot_idx:
-    for t in range(nt):
-        plt.subplot(gs[t])
-        plt.imshow(X_test[i,t], interpolation='none')
-        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
-        if t==0: plt.ylabel('Actual', fontsize=10)
-
-        plt.subplot(gs[t + nt])
-        plt.imshow(X_hat[i,t], interpolation='none')
-        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
-        if t==0: plt.ylabel('Predicted', fontsize=10)
-
-    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.png')
-    plt.clf()
+#aspect_ratio = float(X_hat.shape[2]) / X_hat.shape[3]
+#plt.figure(figsize = (nt, 2*aspect_ratio))
+#gs = gridspec.GridSpec(2, nt)
+#gs.update(wspace=0., hspace=0.)
+#plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
+#if not os.path.exists(plot_save_dir): 
+#    os.mkdir(plot_save_dir)
+#plot_idx = np.random.permutation(X_test.shape[0])[:n_plot]
+#for i in plot_idx:
+#    for t in range(nt):
+#        plt.subplot(gs[t])
+#        plt.imshow(X_test[i,t], interpolation='none')
+#        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
+#        if t==0: plt.ylabel('Actual', fontsize=10)
+#
+#        plt.subplot(gs[t + nt])
+#        plt.imshow(X_hat[i,t], interpolation='none')
+#        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
+#        if t==0: plt.ylabel('Predicted', fontsize=10)
+#
+#    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.png')
+#    plt.clf()
