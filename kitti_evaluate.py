@@ -26,8 +26,8 @@ nt = 10
 
 weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_model.json')
-test_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_Test.hkl')
-test_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Test.hkl')
+test_file = os.path.join(DATA_DIR, 'UCSDped2', 'X_Test.hkl')
+test_sources = os.path.join(DATA_DIR, 'UCSDped2', 'sources_Test.hkl')
 
 # Load trained model
 f = open(json_file, 'r')
@@ -59,37 +59,40 @@ mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timestep
 mse_prev = np.mean( (X_test[:, :-1] - X_test[:, 1:])**2 )
 if not os.path.exists(RESULTS_SAVE_DIR): 
     os.mkdir(RESULTS_SAVE_DIR)
-f = open(RESULTS_SAVE_DIR + 'prediction_scores.txt', 'w')
+f = open(RESULTS_SAVE_DIR + 'prediction_scores_ped2.txt', 'w')
 f.write("Model MSE: %f\n" % mse_model)
 f.write("Previous Frame MSE: %f" % mse_prev)
 f.close()
+#
+X_test_file = os.path.join(RESULTS_SAVE_DIR, 'X_test_ped2')
+X_hat_file = os.path.join(RESULTS_SAVE_DIR, 'X_hat_ped2')
+X_hat = np.squeeze(X_hat, axis=-1)
+X_test = np.squeeze(X_test, axis=-1)
 
-X_test_file = os.path.join(RESULTS_SAVE_DIR, 'X_test')
-X_hat_file = os.path.join(RESULTS_SAVE_DIR, 'X_hat')
 np.save(X_test_file, X_test)
 np.save(X_hat_file, X_hat)
-#np.squeeze(X_hat, axis=-1)
-#np.squeeze(X_test, axis=-1)
+#X_test = np.load(r'C:\Users\karth\Documents\prednet\X_test.npy')
+#X_hat = np.load(r'C:\Users\karth\Documents\prednet\X_hat.npy')
 # Plot some predictions
-#aspect_ratio = float(X_hat.shape[2]) / X_hat.shape[3]
-#plt.figure(figsize = (nt, 2*aspect_ratio))
-#gs = gridspec.GridSpec(2, nt)
-#gs.update(wspace=0., hspace=0.)
-#plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
-#if not os.path.exists(plot_save_dir): 
-#    os.mkdir(plot_save_dir)
-#plot_idx = np.random.permutation(X_test.shape[0])[:n_plot]
-#for i in plot_idx:
-#    for t in range(nt):
-#        plt.subplot(gs[t])
-#        plt.imshow(X_test[i,t], interpolation='none')
-#        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
-#        if t==0: plt.ylabel('Actual', fontsize=10)
-#
-#        plt.subplot(gs[t + nt])
-#        plt.imshow(X_hat[i,t], interpolation='none')
-#        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
-#        if t==0: plt.ylabel('Predicted', fontsize=10)
-#
-#    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.png')
-#    plt.clf()
+aspect_ratio = float(X_hat.shape[2]) / X_hat.shape[3]
+plt.figure(figsize = (nt, 2*aspect_ratio))
+gs = gridspec.GridSpec(2, nt)
+gs.update(wspace=0., hspace=0.)
+plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots_ped2/')
+if not os.path.exists(plot_save_dir): 
+    os.mkdir(plot_save_dir)
+plot_idx = np.random.permutation(X_test.shape[0])[:n_plot]
+for i in plot_idx:
+    for t in range(nt):
+        plt.subplot(gs[t])
+        plt.imshow(X_test[i,t], cmap='gray', interpolation='none')
+        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
+        if t==0: plt.ylabel('Actual', fontsize=10)
+
+        plt.subplot(gs[t + nt])
+        plt.imshow(X_hat[i,t], cmap='gray', interpolation='none')
+        plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
+        if t==0: plt.ylabel('Predicted', fontsize=10)
+
+    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.png')
+    plt.clf()
