@@ -31,10 +31,10 @@ val_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_Val.hkl')
 val_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Val.hkl')
 
 # Training parameters
-nb_epoch = 5
+nb_epoch = 50
 batch_size = 4
 samples_per_epoch = 500
-N_seq_val = 100  # number of sequences to use for validation
+N_seq_val = 300  # number of sequences to use for validation
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
