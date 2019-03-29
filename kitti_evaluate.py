@@ -26,8 +26,8 @@ nt = 10
 
 weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_model.json')
-test_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_test.hkl')
-test_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_test.hkl')
+test_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_Test.hkl')
+test_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Test.hkl')
 
 # Load trained model
 f = open(json_file, 'r')
