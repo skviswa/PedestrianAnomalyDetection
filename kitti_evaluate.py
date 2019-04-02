@@ -57,7 +57,7 @@ nt = 10
 from process_kitti import get_files
 from collections import defaultdict
 
-subdir = 'UCSDped1'
+subdir = ['UCSDped1']
 
 splits = {s: get_files(s, subdir) for s in ['Test']}    
 for split in splits:
@@ -76,7 +76,7 @@ X_hat = np.load(r'C:\Users\karth\Documents\GitHub\prednet\X_hat_ped1.npy')
 
 curr_location = 0
 possible_starts = defaultdict(list)
-while curr_location < X_test.shape[0] - nt + 1:
+while curr_location < len(im_list) - nt + 1:
     if source_list[curr_location] == source_list[curr_location + nt - 1]:
         possible_starts[source_list[curr_location]].append(curr_location)
         curr_location += nt
