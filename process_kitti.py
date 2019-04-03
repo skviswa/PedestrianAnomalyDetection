@@ -27,7 +27,7 @@ def get_files(folder_name, subdir):
     return files
 
 def process_data(subdir):
-    splits = {s: get_files(s, subdir) for s in ['Train', 'Test', 'Val']}    
+    splits = {s: get_files(s, subdir) for s in ['Train', 'Test', 'Val']} #['Test']
     for split in splits:
         im_list = []
         source_list = []  # corresponds to recording that image came from
@@ -38,7 +38,8 @@ def process_data(subdir):
                     files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
                     im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
                     source_list += [folder] * len(files)
-        
+        im_list.sort()
+        source_list.sort()
         print( 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images')
         X = np.zeros((len(im_list),) + desired_im_sz + (1,), np.uint8)
         for i, im_file in enumerate(im_list):
@@ -52,8 +53,10 @@ def process_data(subdir):
             if not os.path.exists(os.path.join(DATA_DIR, 'total')):
                 os.mkdir(os.path.join(DATA_DIR, 'total'))
             hkl.dump(X, os.path.join(DATA_DIR, 'total', 'X_' + split + '.hkl'))
-            hkl.dump(source_list, os.path.join(DATA_DIR, 'total', 'sources_' + split + '.hkl'))            
-
+            hkl.dump(source_list, os.path.join(DATA_DIR, 'total', 'sources_' + split + '.hkl')) 
+            
+#        X_saved = hkl.load(os.path.join(DATA_DIR, subdir[0], 'X_test.hkl'))
+#        assert np.all((X, X_saved))
 
 # resize and crop image
 def process_im(im, desired_sz):

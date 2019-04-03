@@ -12,12 +12,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-#from keras import backend as K
-#from keras.models import Model, model_from_json
-#from keras.layers import Input, Dense, Flatten
-#
-#from prednet import PredNet
-#from data_utils import SequenceGenerator
+from keras import backend as K
+from keras.models import Model, model_from_json
+from keras.layers import Input, Dense, Flatten
+
+from prednet import PredNet
+from data_utils import SequenceGenerator
 from kitti_settings import *
 from datetime import datetime
 from process_kitti import get_files
@@ -80,36 +80,36 @@ subdir = 'UCSDped1'
 
 weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_model.json')
-test_file = os.path.join(DATA_DIR, sd, 'X_Test.hkl')
+test_file = os.path.join(DATA_DIR, subdir, 'X_Test.hkl')
 test_sources = os.path.join(DATA_DIR, subdir, 'sources_Test.hkl')
 
 # Load trained model
-#f = open(json_file, 'r')
-#json_string = f.read()
-#f.close()
-#train_model = model_from_json(json_string, custom_objects = {'PredNet': PredNet})
-#train_model.load_weights(weights_file)
-#
-## Create testing model (to output predictions)
-#layer_config = train_model.layers[1].get_config()
-#layer_config['output_mode'] = 'prediction'
-#data_format = layer_config['data_format'] if 'data_format' in layer_config else layer_config['dim_ordering']
-#test_prednet = PredNet(weights=train_model.layers[1].get_weights(), **layer_config)
-#input_shape = list(train_model.layers[0].batch_input_shape[1:])
-#input_shape[0] = nt
-#inputs = Input(shape=tuple(input_shape))
-#predictions = test_prednet(inputs)
-#test_model = Model(inputs=inputs, outputs=predictions)
-#
-#test_generator = SequenceGenerator(test_file, test_sources, nt, sequence_start_mode='unique', data_format=data_format)
-#X_test = test_generator.create_all()
-#X_hat = test_model.predict(X_test, batch_size)
-#if data_format == 'channels_first':
-#    X_test = np.transpose(X_test, (0, 1, 3, 4, 2))
-#    X_hat = np.transpose(X_hat, (0, 1, 3, 4, 2))
-#
-#X_hat = np.squeeze(X_hat, axis=-1)
-#X_test = np.squeeze(X_test, axis=-1)
+f = open(json_file, 'r')
+json_string = f.read()
+f.close()
+train_model = model_from_json(json_string, custom_objects = {'PredNet': PredNet})
+train_model.load_weights(weights_file)
+
+# Create testing model (to output predictions)
+layer_config = train_model.layers[1].get_config()
+layer_config['output_mode'] = 'prediction'
+data_format = layer_config['data_format'] if 'data_format' in layer_config else layer_config['dim_ordering']
+test_prednet = PredNet(weights=train_model.layers[1].get_weights(), **layer_config)
+input_shape = list(train_model.layers[0].batch_input_shape[1:])
+input_shape[0] = nt
+inputs = Input(shape=tuple(input_shape))
+predictions = test_prednet(inputs)
+test_model = Model(inputs=inputs, outputs=predictions)
+
+test_generator = SequenceGenerator(test_file, test_sources, nt, sequence_start_mode='unique', data_format=data_format)
+X_test = test_generator.create_all()
+X_hat = test_model.predict(X_test, batch_size)
+if data_format == 'channels_first':
+    X_test = np.transpose(X_test, (0, 1, 3, 4, 2))
+    X_hat = np.transpose(X_hat, (0, 1, 3, 4, 2))
+
+X_hat = np.squeeze(X_hat, axis=-1)
+X_test = np.squeeze(X_test, axis=-1)
 
 Xhat_filename = 'Xhat.npy'
 Xtest_filename = 'Xtest.npy'
@@ -153,6 +153,7 @@ err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir)
 
 X_test = np.load(r'C:\Users\karth\Documents\GitHub\prednet\X_test_ped1.npy')
 X_hat = np.load(r'C:\Users\karth\Documents\GitHub\prednet\X_hat_ped1.npy')
+plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
 
 im_list, source_list = get_test_splits([subdir])
 curr_location = 0
@@ -163,7 +164,7 @@ while curr_location < len(im_list) - nt + 1:
         curr_location += nt
     else:
         curr_location += 1
-
+#
 mse_videos = dict()
 mse_model_frame = defaultdict(list)
 mse_prev_frame = defaultdict(list)
@@ -191,14 +192,13 @@ with open(mse_frame_path, 'w') as fp:
 with open(mse_prev_frame_path, 'w') as fp:
     json.dump(mse_prev_frame, fp, sort_keys=True, indent=4)
     
-#np.save(Xhat_path, X_hat)
+np.save(Xhat_path, X_hat)
+np.save(Xtest_path, X_test)
 
 # Compare MSE of PredNet predictions vs. using last frame.  Write results to prediction_scores.txt
 f = open(overall_mse_path, 'w')
 f.write("Model MSE: %f\n" % mse_model)
 f.write("Previous Frame MSE: %f" % mse_prev)
 f.close()
-print (pred_save_dir)
-print (err_save_dir)
 compare_results(pred_save_path, X_test, X_hat, nt)
 make_error_plot(mse_model_frame, err_save_path)
