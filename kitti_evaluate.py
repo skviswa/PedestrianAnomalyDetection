@@ -9,6 +9,7 @@ import json
 import numpy as np
 from six.moves import cPickle
 import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
@@ -151,9 +152,9 @@ overall_mse_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, overall_ms
 pred_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir)
 err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir)
 
-X_test = np.load(r'C:\Users\karth\Documents\GitHub\prednet\X_test_ped1.npy')
-X_hat = np.load(r'C:\Users\karth\Documents\GitHub\prednet\X_hat_ped1.npy')
-plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
+#X_test = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xtest.npy')
+#X_hat = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xhat.npy')
+#plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
 
 im_list, source_list = get_test_splits([subdir])
 curr_location = 0
@@ -193,7 +194,7 @@ with open(mse_prev_frame_path, 'w') as fp:
     json.dump(mse_prev_frame, fp, sort_keys=True, indent=4)
     
 np.save(Xhat_path, X_hat)
-np.save(Xtest_path, X_test)
+#np.save(Xtest_path, X_test)
 
 # Compare MSE of PredNet predictions vs. using last frame.  Write results to prediction_scores.txt
 f = open(overall_mse_path, 'w')

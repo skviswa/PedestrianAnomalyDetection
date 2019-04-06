@@ -12,13 +12,14 @@ from keras.models import Model
 from keras.layers import Input, Dense, Flatten
 from keras.layers import LSTM
 from keras.layers import TimeDistributed
-from keras.callbacks import LearningRateScheduler, ModelCheckpoint
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint, CSVLogger
 from keras.optimizers import Adam
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
 from kitti_settings import *
-
+from datetime import datetime
+import json
 
 save_model = True  # if weights will be saved
 weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ucsd_weights.hdf5')  # where weights will be saved
@@ -30,26 +31,46 @@ train_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Train.hkl')
 val_file = os.path.join(DATA_DIR, 'UCSDped1', 'X_Val.hkl')
 val_sources = os.path.join(DATA_DIR, 'UCSDped1', 'sources_Val.hkl')
 
+if not os.path.exists(LOG_DIR):
+    os.mkdir(LOG_DIR)
+
+now = datetime.now
+folder_now = now().strftime("%Y_%m_%d-%H%M")
+
+if not os.path.exists(os.path.join(LOG_DIR, folder_now)):
+    os.mkdir(os.path.join(LOG_DIR, folder_now))
+
+training_log = os.path.join(LOG_DIR, folder_now, 'log.csv')
+model_weights = os.path.join(LOG_DIR, folder_now, 'weights.h5')
+hyperparam = os.path.join(LOG_DIR, folder_now, 'hyperparam.json')
 # Training parameters
-nb_epoch = 10
+nb_epoch = 65
 batch_size = 4
-samples_per_epoch = 500
-N_seq_val = 300  # number of sequences to use for validation
+samples_per_epoch = 600
+N_seq_val = 400  # number of sequences to use for validation
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
 input_shape = (n_channels, im_height, im_width) if K.image_data_format() == 'channels_first' else (im_height, im_width, n_channels)
-stack_sizes = (n_channels, 48, 96, 192)
+sz1 = 32 #48
+sz2 = 64 #96
+sz3 = 128 #192
+stack_sizes = (n_channels, sz1, sz2, sz3)
 R_stack_sizes = stack_sizes
-A_filt_sizes = (3, 3, 3)
-Ahat_filt_sizes = (3, 3, 3, 3)
-R_filt_sizes = (3, 3, 3, 3)
+fz = 3
+A_filt_sizes = (fz, fz, fz)
+Ahat_filt_sizes = (fz, fz, fz, fz)
+R_filt_sizes = (fz, fz, fz, fz)
 layer_loss_weights = np.array([1., 0., 0., 0.])  # weighting for each layer in final loss; "L_0" model:  [1, 0, 0, 0], "L_all": [1, 0.1, 0.1, 0.1]
 layer_loss_weights = np.expand_dims(layer_loss_weights, 1)
 nt = 10  # number of timesteps used for sequences in training
 time_loss_weights = 1./ (nt - 1) * np.ones((nt,1))  # equally weight all timesteps except the first
 time_loss_weights[0] = 0
 
+hyperparam_dict = {'epoch': nb_epoch, 'batch_size': batch_size, 'samples_per_epoch': samples_per_epoch, 'N_seq_val': N_seq_val, 
+                   'stack_sz': sz1, 'stack_sz2': sz2, 'stack_sz3': sz3, 'A_filt_sz': fz}
+with open(hyperparam, 'w') as f:
+    json.dump(hyperparam_dict, f)
 
 prednet = PredNet(stack_sizes, R_stack_sizes,
                   A_filt_sizes, Ahat_filt_sizes, R_filt_sizes,
@@ -66,15 +87,17 @@ model.compile(loss='mean_absolute_error', optimizer='adam')
 train_generator = SequenceGenerator(train_file, train_sources, nt, batch_size=batch_size, shuffle=True)
 val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_size, N_seq=N_seq_val)
 
-lr_schedule = lambda epoch: 0.001 if epoch < 75 else 0.0001    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
+lr_schedule = lambda epoch: 0.001 if epoch < 50 else 0.0001    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
     if not os.path.exists(WEIGHTS_DIR): 
         os.mkdir(WEIGHTS_DIR)
     callbacks.append(ModelCheckpoint(filepath=weights_file, monitor='val_loss', save_best_only=True))
+    callbacks.append(CSVLogger(training_log))
 
 history = model.fit_generator(train_generator, samples_per_epoch / batch_size, nb_epoch, callbacks=callbacks,
                 validation_data=val_generator, validation_steps=N_seq_val / batch_size)
+model.save(model_weights)
 
 if save_model:
     json_string = model.to_json()
