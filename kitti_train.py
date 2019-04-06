@@ -48,6 +48,9 @@ nb_epoch = 65
 batch_size = 4
 samples_per_epoch = 600
 N_seq_val = 400  # number of sequences to use for validation
+old_learning_rate = 0.001
+new_learning_rate = 0.0001
+epoch_learning_rate_number = 50
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
@@ -68,7 +71,8 @@ time_loss_weights = 1./ (nt - 1) * np.ones((nt,1))  # equally weight all timeste
 time_loss_weights[0] = 0
 
 hyperparam_dict = {'epoch': nb_epoch, 'batch_size': batch_size, 'samples_per_epoch': samples_per_epoch, 'N_seq_val': N_seq_val, 
-                   'stack_sz': sz1, 'stack_sz2': sz2, 'stack_sz3': sz3, 'A_filt_sz': fz}
+                   'stack_sz': sz1, 'stack_sz2': sz2, 'stack_sz3': sz3, 'A_filt_sz': fz, 'old_learning_rate':old_learning_rate, 
+                   'new_learning_rate':new_learning_rate, 'epoch_learning_rate':epoch_learning_rate_number}
 with open(hyperparam, 'w') as f:
     json.dump(hyperparam_dict, f)
 
@@ -87,7 +91,7 @@ model.compile(loss='mean_absolute_error', optimizer='adam')
 train_generator = SequenceGenerator(train_file, train_sources, nt, batch_size=batch_size, shuffle=True)
 val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_size, N_seq=N_seq_val)
 
-lr_schedule = lambda epoch: 0.001 if epoch < 50 else 0.0001    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
+lr_schedule = lambda epoch: old_learning_rate if epoch < epoch_learning_rate_number else new_learning_rate    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
     if not os.path.exists(WEIGHTS_DIR): 
