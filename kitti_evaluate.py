@@ -111,7 +111,7 @@ if data_format == 'channels_first':
 
 X_hat = np.squeeze(X_hat, axis=-1)
 X_test = np.squeeze(X_test, axis=-1)
-
+#
 Xhat_filename = 'Xhat.npy'
 Xtest_filename = 'Xtest.npy'
 mse_videos_filename = 'mse_videos.json'
@@ -121,6 +121,7 @@ overall_mse_filename = 'predictions.txt'
 
 pred_save_dir = 'prediction_plots'
 err_save_dir = 'error_plots'
+err_prev_save_dir = 'prev_frame_plots'
 
 now = datetime.now
 folder_now = now().strftime("%Y_%m_%d-%H%M")
@@ -134,14 +135,14 @@ if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir)):
 if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now)):
     os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now))
 
-if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now)):
-    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now))
-
 if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir)):
     os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir))
 
 if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir)):
     os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir))
+
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev_save_dir)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev_save_dir))
     
 Xhat_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, Xhat_filename)
 Xtest_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, Xtest_filename)
@@ -151,7 +152,9 @@ mse_prev_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, mse_pre
 overall_mse_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, overall_mse_filename)
 pred_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir)
 err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir)
+err_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev_save_dir)
 
+#
 #X_test = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xtest.npy')
 #X_hat = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xhat.npy')
 #plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
@@ -193,13 +196,16 @@ with open(mse_frame_path, 'w') as fp:
 with open(mse_prev_frame_path, 'w') as fp:
     json.dump(mse_prev_frame, fp, sort_keys=True, indent=4)
     
-np.save(Xhat_path, X_hat)
+#np.save(Xhat_path, X_hat)
 #np.save(Xtest_path, X_test)
 
 # Compare MSE of PredNet predictions vs. using last frame.  Write results to prediction_scores.txt
 f = open(overall_mse_path, 'w')
 f.write("Model MSE: %f\n" % mse_model)
-f.write("Previous Frame MSE: %f" % mse_prev)
+f.write("\n Previous Frame MSE: %f" % mse_prev)
 f.close()
 compare_results(pred_save_path, X_test, X_hat, nt)
 make_error_plot(mse_model_frame, err_save_path)
+#with open(r'C:\Users\karth\Documents\GitHub\prednet\ucsd_results\res\mse_prev_frame.json') as f:
+#    mse_prev_frame = json.load(f)
+make_error_plot(mse_prev_frame, err_prev_save_path)
