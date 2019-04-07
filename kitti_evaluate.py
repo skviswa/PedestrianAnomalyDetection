@@ -35,7 +35,12 @@ def get_test_splits(subdir):
                 if os.path.exists(im_dir):
                     files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
                     im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-                    source_list += [folder] * len(files)
+                    if len(subdir) == 2:
+                        source_list += [folder+'_'+sd] * len(files)
+                    else:
+                        source_list += [folder] * len(files)
+        im_list.sort()
+        source_list.sort()
     return im_list, source_list
 
 def compare_results(plot_save_dir, X_test, X_hat, nt):
