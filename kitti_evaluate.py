@@ -30,15 +30,14 @@ def get_test_splits(subdir):
         im_list = []
         source_list = []  # corresponds to recording that image came from
         for folder in splits[split]:
-            for sd in subdir:
-                im_dir = os.path.join(DATA_DIR, sd, split, folder)
-                if os.path.exists(im_dir):
-                    files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
-                    im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-                    if len(subdir) == 2:
-                        source_list += [folder+'_'+sd] * len(files)
-                    else:
-                        source_list += [folder] * len(files)
+            im_dir = os.path.join(DATA_DIR, folder) #sd, split, 
+            if os.path.exists(im_dir):
+                files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
+                im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
+                if len(subdir) == 2:
+                    source_list += [os.path.basename(folder)+'_'+os.path.dirname(os.path.dirname(folder))] * len(files)
+                else:
+                    source_list += [os.path.basename(folder)] * len(files)
         im_list.sort()
         source_list.sort()
     return im_list, source_list
@@ -83,7 +82,7 @@ batch_size = 10
 nt = 10
 
 subdir_model = 'total'
-subdir_test = 'total'
+subdir_test = 'total'#'UCSDped1'
 
 weights_file = os.path.join(WEIGHTS_DIR, subdir_model, 'prednet_ucsd_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, subdir_model, 'prednet_ucsd_model.json')
@@ -167,10 +166,10 @@ err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_save
 err_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_prev_save_dir)
 err_model_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_model_prev_save_dir)
 
-#
-#X_test = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xtest.npy')
-#X_hat = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xhat.npy')
-#plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
+##X_test = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xtest.npy')
+##X_hat = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xhat.npy')
+##plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
+
 if subdir_test == 'total':
     im_list, source_list = get_test_splits(['UCSDped1', 'UCSDped2'])
 else:
@@ -183,7 +182,7 @@ while curr_location < len(im_list) - nt + 1:
         curr_location += nt
     else:
         curr_location += 1
-#
+
 mse_videos = dict()
 mse_model_frame = defaultdict(list)
 mse_prev_frame = defaultdict(list)

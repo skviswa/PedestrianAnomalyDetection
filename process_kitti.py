@@ -23,7 +23,7 @@ def get_files(folder_name, subdir):
     files = []
     for sd in subdir:
         path = os.path.join(DATA_DIR, sd, folder_name)
-        files += [i for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
+        files += [os.path.join(sd, folder_name, i) for i in os.listdir(path) if not i.startswith('.') and os.path.isdir(os.path.join(path,i))]
     return files
 
 def process_data(subdir):
@@ -32,15 +32,14 @@ def process_data(subdir):
         im_list = []
         source_list = []  # corresponds to recording that image came from
         for folder in splits[split]:
-            for sd in subdir:
-                im_dir = os.path.join(DATA_DIR, sd, split, folder)
-                if os.path.exists(im_dir):
-                    files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
-                    im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-                    if len(subdir) == 2:
-                        source_list += [folder+'_'+sd] * len(files)
-                    else:
-                        source_list += [folder] * len(files)
+            im_dir = os.path.join(DATA_DIR, folder) 
+            if os.path.exists(im_dir):
+                files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
+                im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
+                if len(subdir) == 2:
+                    source_list += [os.path.basename(folder)+'_'+os.path.dirname(os.path.dirname(folder))] * len(files)
+                else:
+                    source_list += [os.path.basename(folder)] * len(files)
         im_list.sort()
         source_list.sort()
         print( 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images')
