@@ -158,8 +158,10 @@ err_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev
 #X_test = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xtest.npy')
 #X_hat = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xhat.npy')
 #plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
-
-im_list, source_list = get_test_splits([subdir])
+if subdir == 'total':
+    im_list, source_list = get_test_splits(['UCSDped1', 'UCSDped2'])
+else:
+    im_list, source_list = get_test_splits([subdir])
 curr_location = 0
 possible_starts = defaultdict(list)
 while curr_location < len(im_list) - nt + 1:
