@@ -37,7 +37,10 @@ def process_data(subdir):
                 if os.path.exists(im_dir):
                     files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
                     im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-                    source_list += [folder] * len(files)
+                    if len(subdir == 2):
+                        source_list += [folder+'_'+sd] * len(files)
+                    else:
+                        source_list += [folder] * len(files)
         im_list.sort()
         source_list.sort()
         print( 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images')
@@ -68,6 +71,6 @@ def process_im(im, desired_sz):
 
 
 if __name__ == '__main__':
-    process_data(['UCSDped1'])
-    process_data(['UCSDped2'])
+#    process_data(['UCSDped1'])
+#    process_data(['UCSDped2'])
     process_data(['UCSDped1', 'UCSDped2'])

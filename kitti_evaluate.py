@@ -77,7 +77,7 @@ n_plot = 40
 batch_size = 10
 nt = 10
 
-subdir = 'UCSDped2'
+subdir = 'total'
 
 weights_file = os.path.join(WEIGHTS_DIR, subdir, 'prednet_ucsd_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, subdir, 'prednet_ucsd_model.json')
