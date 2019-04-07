@@ -38,23 +38,26 @@ val_sources = os.path.join(DATA_DIR, subdir, 'sources_Val.hkl')
 if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
+if not os.path.exists(os.path.join(LOG_DIR, subdir)):
+    os.mkdir(os.path.join(LOG_DIR, subdir))
+
 now = datetime.now
 folder_now = now().strftime("%Y_%m_%d-%H%M")
 
-if not os.path.exists(os.path.join(LOG_DIR, folder_now)):
-    os.mkdir(os.path.join(LOG_DIR, folder_now))
+if not os.path.exists(os.path.join(LOG_DIR, subdir, folder_now)):
+    os.mkdir(os.path.join(LOG_DIR, subdir, folder_now))
 
-training_log = os.path.join(LOG_DIR, folder_now, 'log.csv')
-model_weights = os.path.join(LOG_DIR, folder_now, 'weights.h5')
-hyperparam = os.path.join(LOG_DIR, folder_now, 'hyperparam.json')
+training_log = os.path.join(LOG_DIR, subdir, folder_now, 'log.csv')
+model_weights = os.path.join(LOG_DIR, subdir, folder_now, 'weights.h5')
+hyperparam = os.path.join(LOG_DIR, subdir, folder_now, 'hyperparam.json')
 # Training parameters
 nb_epoch = 50
 batch_size = 4
 samples_per_epoch = 250#600
 N_seq_val = 30#80  # number of sequences to use for validation
 old_learning_rate = 0.001
-new_learning_rate = 0.0001
-epoch_learning_rate_number = 30
+new_learning_rate = 0.0007
+epoch_learning_rate_number = 20
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
