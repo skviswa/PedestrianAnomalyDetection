@@ -37,7 +37,7 @@ def process_data(subdir):
                 if os.path.exists(im_dir):
                     files = [i for i in os.listdir(im_dir) if not i.startswith('.')]
                     im_list += [os.path.join(im_dir ,f) for f in sorted(files)]
-                    if len(subdir == 2):
+                    if len(subdir) == 2:
                         source_list += [folder+'_'+sd] * len(files)
                     else:
                         source_list += [folder] * len(files)
