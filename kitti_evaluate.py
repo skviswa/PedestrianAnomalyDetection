@@ -82,12 +82,13 @@ n_plot = 40
 batch_size = 10
 nt = 10
 
-subdir = 'total'
+subdir_model = 'total'
+subdir_test = 'total'
 
-weights_file = os.path.join(WEIGHTS_DIR, subdir, 'prednet_ucsd_weights.hdf5')
-json_file = os.path.join(WEIGHTS_DIR, subdir, 'prednet_ucsd_model.json')
-test_file = os.path.join(DATA_DIR, subdir, 'X_Test.hkl')
-test_sources = os.path.join(DATA_DIR, subdir, 'sources_Test.hkl')
+weights_file = os.path.join(WEIGHTS_DIR, subdir_model, 'prednet_ucsd_weights.hdf5')
+json_file = os.path.join(WEIGHTS_DIR, subdir_model, 'prednet_ucsd_model.json')
+test_file = os.path.join(DATA_DIR, subdir_test, 'X_Test.hkl')
+test_sources = os.path.join(DATA_DIR, subdir_test, 'sources_Test.hkl')
 
 # Load trained model
 f = open(json_file, 'r')
@@ -122,11 +123,13 @@ Xtest_filename = 'Xtest.npy'
 mse_videos_filename = 'mse_videos.json'
 mse_frame_filename = 'mse_frame.json'
 mse_prev_frame_filename = 'mse_prev_frame.json'
+mse_err_prev_frame_filename = 'mse_err_prev_frame.json'
 overall_mse_filename = 'predictions.txt'
 
 pred_save_dir = 'prediction_plots'
 err_save_dir = 'error_plots'
 err_prev_save_dir = 'prev_frame_plots'
+err_model_prev_save_dir = 'model_prev_frame_plots'
 
 now = datetime.now
 folder_now = now().strftime("%Y_%m_%d-%H%M")
@@ -134,39 +137,44 @@ folder_now = now().strftime("%Y_%m_%d-%H%M")
 if not os.path.exists(RESULTS_SAVE_DIR): 
     os.mkdir(RESULTS_SAVE_DIR)
 
-if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir)):
-    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir))
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test))
 
-if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now)):
-    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now))
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now))
 
-if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir)):
-    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir))
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, pred_save_dir)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, pred_save_dir))
 
-if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir)):
-    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir))
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_save_dir)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_save_dir))
 
-if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev_save_dir)):
-    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev_save_dir))
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_prev_save_dir)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_prev_save_dir))
     
-Xhat_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, Xhat_filename)
-Xtest_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, Xtest_filename)
-mse_videos_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, mse_videos_filename)
-mse_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, mse_frame_filename)
-mse_prev_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, mse_prev_frame_filename)
-overall_mse_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, overall_mse_filename)
-pred_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, pred_save_dir)
-err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_save_dir)
-err_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir, folder_now, err_prev_save_dir)
+if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_model_prev_save_dir)):
+    os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_model_prev_save_dir))
+    
+Xhat_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, Xhat_filename)
+Xtest_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, Xtest_filename)
+mse_videos_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_videos_filename)
+mse_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_frame_filename)
+mse_prev_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_prev_frame_filename)
+mse_err_prev_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_err_prev_frame_filename)
+overall_mse_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, overall_mse_filename)
+pred_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, pred_save_dir)
+err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_save_dir)
+err_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_prev_save_dir)
+err_model_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_model_prev_save_dir)
 
 #
 #X_test = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xtest.npy')
 #X_hat = np.load(r'ucsd_results\UCSDped1\2019_04_03-2040\Xhat.npy')
 #plt.imshow(X_test[11,6], cmap='gray', interpolation='none')
-if subdir == 'total':
+if subdir_test == 'total':
     im_list, source_list = get_test_splits(['UCSDped1', 'UCSDped2'])
 else:
-    im_list, source_list = get_test_splits([subdir])
+    im_list, source_list = get_test_splits([subdir_test])
 curr_location = 0
 possible_starts = defaultdict(list)
 while curr_location < len(im_list) - nt + 1:
@@ -179,16 +187,20 @@ while curr_location < len(im_list) - nt + 1:
 mse_videos = dict()
 mse_model_frame = defaultdict(list)
 mse_prev_frame = defaultdict(list)
+mse_err_prev_frame = defaultdict(list)
 i = 0
 for k,v in sorted(possible_starts.items()):
     n_mini_clips = len(v)
     mse_model_video = np.mean( (X_test[i:i+n_mini_clips, 1:] - X_hat[i:i+n_mini_clips, 1:])**2 ).item()
     mse_prev_video = np.mean( (X_test[i:i+n_mini_clips, :-1] - X_test[i:i+n_mini_clips, 1:])**2 ).item()
+    mse_err_prev_video = np.mean( (X_hat[i:i+n_mini_clips, 1:-1] - X_hat[i:i+n_mini_clips, 2:])**2 ).item()
     for j in range(n_mini_clips):
         for z in range(1,nt):
             mse_model_frame[k].append(np.mean( (X_test[i+j, z, :] - X_hat[i+j, z, :])**2 ).item())
             mse_prev_frame[k].append(np.mean( (X_test[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
-    mse_videos[k] = (mse_model_video, mse_prev_video)
+            if z > 1:
+                mse_err_prev_frame[k].append(np.mean( (X_hat[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
+    mse_videos[k] = (mse_model_video, mse_prev_video, mse_err_prev_video)
     i += n_mini_clips
 
 mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
@@ -202,7 +214,9 @@ with open(mse_frame_path, 'w') as fp:
 
 with open(mse_prev_frame_path, 'w') as fp:
     json.dump(mse_prev_frame, fp, sort_keys=True, indent=4)
-    
+
+with open(mse_err_prev_frame_path, 'w') as fp:
+    json.dump(mse_err_prev_frame, fp, sort_keys=True, indent=4)    
 #np.save(Xhat_path, X_hat)
 #np.save(Xtest_path, X_test)
 
@@ -216,3 +230,4 @@ make_error_plot(mse_model_frame, err_save_path)
 #with open(r'C:\Users\karth\Documents\GitHub\prednet\ucsd_results\res\mse_prev_frame.json') as f:
 #    mse_prev_frame = json.load(f)
 make_error_plot(mse_prev_frame, err_prev_save_path)
+make_error_plot(mse_err_prev_frame, err_model_prev_save_path)
