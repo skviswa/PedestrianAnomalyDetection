@@ -50,7 +50,8 @@ samples_per_epoch = 600
 N_seq_val = 80  # number of sequences to use for validation
 old_learning_rate = 0.001
 new_learning_rate = 0.0001
-epoch_learning_rate_number = 50
+epoch_learning_rate_number = 15
+dropout_rate = 0.5
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
@@ -72,7 +73,7 @@ time_loss_weights[0] = 0
 
 hyperparam_dict = {'epoch': nb_epoch, 'batch_size': batch_size, 'samples_per_epoch': samples_per_epoch, 'N_seq_val': N_seq_val, 
                    'stack_sz': sz1, 'stack_sz2': sz2, 'stack_sz3': sz3, 'A_filt_sz': fz, 'old_learning_rate':old_learning_rate, 
-                   'new_learning_rate':new_learning_rate, 'epoch_learning_rate':epoch_learning_rate_number}
+                   'new_learning_rate':new_learning_rate, 'epoch_learning_rate':epoch_learning_rate_number,'dropout_rate':dropout_rate}
 with open(hyperparam, 'w') as f:
     json.dump(hyperparam_dict, f)
 
@@ -82,9 +83,9 @@ prednet = PredNet(stack_sizes, R_stack_sizes,
 
 inputs = Input(shape=(nt,) + input_shape)
 errors = prednet(inputs)  # errors will be (batch_size, nt, nb_layers)
-errors = Dropout(0.2)(errors)
 errors_by_time = TimeDistributed(Dense(1, trainable=False), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
 errors_by_time = Flatten()(errors_by_time)  # will be (batch_size, nt)
+errors_by_time = Dropout(dropout_rate)(errors_by_time)
 final_errors = Dense(1, weights=[time_loss_weights, np.zeros(1)], trainable=False)(errors_by_time)  # weight errors by time
 model = Model(inputs=inputs, outputs=final_errors)
 model.compile(loss='mean_absolute_error', optimizer='adam')
