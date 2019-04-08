@@ -56,9 +56,9 @@ dropout_rate = 0.2
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
 input_shape = (n_channels, im_height, im_width) if K.image_data_format() == 'channels_first' else (im_height, im_width, n_channels)
-sz1 = 32 #48
-sz2 = 64 #96
-sz3 = 128 #192
+sz1 = 64 #48
+sz2 = 128 #96
+sz3 = 256 #192
 stack_sizes = (n_channels, sz1, sz2, sz3)
 R_stack_sizes = stack_sizes
 fz = 3
