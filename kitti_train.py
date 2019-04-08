@@ -51,7 +51,7 @@ N_seq_val = 80  # number of sequences to use for validation
 old_learning_rate = 0.001
 new_learning_rate = 0.0001
 epoch_learning_rate_number = 15
-dropout_rate = 0.5
+dropout_rate = 0.2
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
