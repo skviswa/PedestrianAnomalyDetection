@@ -14,7 +14,7 @@ from keras.layers import LSTM
 from keras.layers import TimeDistributed
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint, CSVLogger
 from keras.optimizers import Adam
-
+from keras.layers import Dropout
 from prednet import PredNet
 from data_utils import SequenceGenerator
 from kitti_settings import *
@@ -89,6 +89,7 @@ prednet = PredNet(stack_sizes, R_stack_sizes,
 
 inputs = Input(shape=(nt,) + input_shape)
 errors = prednet(inputs)  # errors will be (batch_size, nt, nb_layers)
+errors = Dropout(0.2)(errors)
 errors_by_time = TimeDistributed(Dense(1, trainable=False), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
 errors_by_time = Flatten()(errors_by_time)  # will be (batch_size, nt)
 final_errors = Dense(1, weights=[time_loss_weights, np.zeros(1)], trainable=False)(errors_by_time)  # weight errors by time
