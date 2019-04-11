@@ -51,13 +51,13 @@ training_log = os.path.join(LOG_DIR, subdir, folder_now, 'log.csv')
 model_weights = os.path.join(LOG_DIR, subdir, folder_now, 'weights.h5')
 hyperparam = os.path.join(LOG_DIR, subdir, folder_now, 'hyperparam.json')
 # Training parameters
-nb_epoch = 60
+nb_epoch = 50
 batch_size = 4
 samples_per_epoch = 900# 250, 600
 N_seq_val = 100#30, 80  # number of sequences to use for validation
 old_learning_rate = 0.001
-new_learning_rate = 0.0007
-epoch_learning_rate_number = 35
+new_learning_rate = 0.0009
+epoch_learning_rate_number = 30
 
 # Model parameters
 n_channels, im_height, im_width = (1, 128, 160)
