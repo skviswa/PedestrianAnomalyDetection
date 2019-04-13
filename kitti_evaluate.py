@@ -79,7 +79,7 @@ def make_error_plot(err_dict, err_save_dir):
             
 n_plot = 40
 batch_size = 10
-nt = 5#10
+nt = 20#10
 
 subdir_model = 'total' #'UCSDped2'
 subdir_test = 'total' ##'UCSDped1' 'UCSDped2'
