@@ -60,9 +60,6 @@ def process_data(subdir):
             hkl.dump(X, os.path.join(DATA_DIR, 'total', 'X_' + split + '.hkl'))
             hkl.dump(source_list, os.path.join(DATA_DIR, 'total', 'sources_' + split + '.hkl')) 
             
-        X_saved = hkl.load(os.path.join(DATA_DIR, subdir[0], 'X_test.hkl'))
-        assert np.all((X, X_saved))
-
 # resize and crop image
 def process_im(im, desired_sz):
     target_ds = float(desired_sz[0])/im.shape[0]
