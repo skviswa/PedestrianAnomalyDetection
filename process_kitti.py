@@ -40,7 +40,10 @@ def process_data(subdir):
                     source_list += [os.path.basename(folder)+'_'+os.path.dirname(os.path.dirname(folder))] * len(files)
                 else:
                     source_list += [os.path.basename(folder)] * len(files)
-        im_list.sort()
+        if len(subdir) == 2:
+            im_list.sort(key=lambda x: os.path.basename(os.path.dirname(x)) + '_' + os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(x)))))
+        else:
+            im_list.sort()
         source_list.sort()
         print( 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images')
         X = np.zeros((len(im_list),) + desired_im_sz + (1,), np.uint8)
@@ -57,8 +60,8 @@ def process_data(subdir):
             hkl.dump(X, os.path.join(DATA_DIR, 'total', 'X_' + split + '.hkl'))
             hkl.dump(source_list, os.path.join(DATA_DIR, 'total', 'sources_' + split + '.hkl')) 
             
-#        X_saved = hkl.load(os.path.join(DATA_DIR, subdir[0], 'X_test.hkl'))
-#        assert np.all((X, X_saved))
+        X_saved = hkl.load(os.path.join(DATA_DIR, subdir[0], 'X_test.hkl'))
+        assert np.all((X, X_saved))
 
 # resize and crop image
 def process_im(im, desired_sz):

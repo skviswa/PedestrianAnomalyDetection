@@ -9,9 +9,9 @@ import json
 import numpy as np
 from six.moves import cPickle
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
+#import matplotlib.gridspec as gridspec
 
 from keras import backend as K
 from keras.models import Model, model_from_json
@@ -79,7 +79,7 @@ def make_error_plot(err_dict, err_save_dir):
             
 n_plot = 40
 batch_size = 10
-nt = 20#10
+nt = 10#20
 
 subdir_model = 'total' #'UCSDped2'
 subdir_test = 'total' ##'UCSDped1' 'UCSDped2'
@@ -174,6 +174,13 @@ if subdir_test == 'total':
     im_list, source_list = get_test_splits(['UCSDped1', 'UCSDped2'])
 else:
     im_list, source_list = get_test_splits([subdir_test])
+
+if subdir_test == 'total':
+    im_list.sort(key=lambda x: os.path.basename(os.path.dirname(x)) + '_' + os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(x)))))
+else:
+    im_list.sort()
+source_list.sort()
+            
 curr_location = 0
 possible_starts = defaultdict(list)
 while curr_location < len(im_list) - nt + 1:
@@ -224,7 +231,7 @@ f = open(overall_mse_path, 'w')
 f.write("Model MSE: %f\n" % mse_model)
 f.write("\n Previous Frame MSE: %f" % mse_prev)
 f.close()
-compare_results(pred_save_path, X_test, X_hat, nt)
+#compare_results(pred_save_path, X_test, X_hat, nt)
 make_error_plot(mse_model_frame, err_save_path)
 #with open(r'C:\Users\karth\Documents\GitHub\prednet\ucsd_results\res\mse_prev_frame.json') as f:
 #    mse_prev_frame = json.load(f)
