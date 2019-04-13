@@ -214,29 +214,35 @@ pl.figure()
 
 x = np.linspace(1, 180, 180)
 
-fig, ax = plt.subplots(nrows=2, ncols=1)
+fig, ax = pl.subplots(nrows=2, ncols=1)
 
 ax1 = pl.subplot(gs[0, 0]) 
-ax2 = pl.subplot(gs[0, 1]) 
-ax3 = pl.subplot(gs[1, :]) 
-
-line, = ax3.plot(x, y, color='k')
-
 ax1.set_xticks([])
 ax1.set_yticks([])
+pl.gca().set_title('Test Video') 
 
+ax2 = pl.subplot(gs[0, 1]) 
 ax2.set_xticks([])
 ax2.set_yticks([])
+pl.gca().set_title('Ground Truth') 
+
+ax3 = pl.subplot(gs[1, :]) 
+pl.gca().set_title('Error plot') 
+pl.gca().set_ylabel('MSE')
+pl.gca().set_xlabel('Frames')
+
+
+line, = ax3.plot(x, y, color='k')
 
 
 def update(num, x, y, line):
     line.set_data(x[:num], y[:num])
     line.axes.axis([0, 180, min(y), max(y) + 0.001])
     ax2.imshow(mpimg.imread(os.path.join(path_bmp,images_bmp[num])), animated=True)
-    ax1.imshow(mpimg.imread(os.path.join(path_tif,images_tif[num])), animated=True)
+    ax1.imshow(mpimg.imread(os.path.join(path_tif,images_tif[num])), animated=True ,cmap = 'gray')
     return line
 
 ani = animation.FuncAnimation(fig, update, len(x), fargs=[x, y, line],
                               interval=90, blit=False)
-ani.save('error_3.mp4', writer='ffmpeg', codec='h264')
+ani.save('error_f.mp4', writer='ffmpeg', codec='h264')
 plt.show()
