@@ -51,12 +51,12 @@ training_log = os.path.join(LOG_DIR, subdir, folder_now, 'log.csv')
 model_weights = os.path.join(LOG_DIR, subdir, folder_now, 'weights.h5')
 hyperparam = os.path.join(LOG_DIR, subdir, folder_now, 'hyperparam.json')
 # Training parameters
-nb_epoch = 60
-batch_size = 4
-samples_per_epoch = 250# 900, 600
-N_seq_val = 30#100, 80  # number of sequences to use for validation
+nb_epoch = 50
+batch_size = 8
+samples_per_epoch = 1800# 900, 600, 250
+N_seq_val = 200#100, 80, 30  # number of sequences to use for validation
 old_learning_rate = 0.001
-new_learning_rate = 0.0009
+new_learning_rate = 0.0007
 epoch_learning_rate_number = 30
 
 # Model parameters
@@ -73,7 +73,7 @@ Ahat_filt_sizes = (fz, fz, fz, 1)
 R_filt_sizes = (fz, fz, fz, 1)
 layer_loss_weights = np.array([1., 0., 0., 0.])  # weighting for each layer in final loss; "L_0" model:  [1, 0, 0, 0], "L_all": [1, 0.1, 0.1, 0.1]
 layer_loss_weights = np.expand_dims(layer_loss_weights, 1)
-nt = 10  # number of timesteps used for sequences in training
+nt = 5#10  # number of timesteps used for sequences in training
 time_loss_weights = 1./ (nt - 1) * np.ones((nt,1))  # equally weight all timesteps except the first
 time_loss_weights[0] = 0
 
