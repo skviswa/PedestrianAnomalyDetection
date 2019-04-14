@@ -9,9 +9,9 @@ import json
 import numpy as np
 from six.moves import cPickle
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-#import matplotlib.gridspec as gridspec
+import matplotlib.gridspec as gridspec
 
 from keras import backend as K
 from keras.models import Model, model_from_json
