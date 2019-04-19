@@ -230,7 +230,7 @@ for k,v in sorted(possible_starts.items()):
 
             if z > 1:
                 mse_err_prev_frame[k].append(np.mean( (X_hat[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
-                mse_err_prev_frame_sd[k].append(np.sd( (X_hat[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
+                mse_err_prev_frame_sd[k].append(np.std( (X_hat[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
     mse_videos[k] = (mse_model_video, mse_prev_video, mse_err_prev_video)
     mse_videos_sd[k] = (mse_model_video_sd, mse_prev_video_sd, mse_err_prev_video_sd)
     i += n_mini_clips
