@@ -124,6 +124,11 @@ mse_frame_filename = 'mse_frame.json'
 mse_prev_frame_filename = 'mse_prev_frame.json'
 mse_err_prev_frame_filename = 'mse_err_prev_frame.json'
 overall_mse_filename = 'predictions.txt'
+mse_videos_sd_filename = 'mse_videos_sd.json'
+mse_frame_sd_filename = 'mse_frame_sd.json'
+mse_prev_frame_sd_filename = 'mse_prev_frame_sd.json'
+mse_err_prev_frame_sd_filename = 'mse_err_prev_frame_sd.json'
+
 
 pred_save_dir = 'prediction_plots'
 err_save_dir = 'error_plots'
@@ -160,6 +165,10 @@ mse_videos_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_vi
 mse_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_frame_filename)
 mse_prev_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_prev_frame_filename)
 mse_err_prev_frame_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_err_prev_frame_filename)
+mse_videos_sd_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_videos_sd_filename)
+mse_frame_sd_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_frame_sd_filename)
+mse_prev_frame_sd_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_prev_frame_sd_filename)
+mse_err_prev_frame_sd_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, mse_err_prev_frame_sd_filename)
 overall_mse_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, overall_mse_filename)
 pred_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, pred_save_dir)
 err_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_save_dir)
@@ -194,23 +203,43 @@ mse_videos = dict()
 mse_model_frame = defaultdict(list)
 mse_prev_frame = defaultdict(list)
 mse_err_prev_frame = defaultdict(list)
+
+mse_videos_sd = dict()
+mse_model_frame_sd = defaultdict(list)
+mse_prev_frame_sd = defaultdict(list)
+mse_err_prev_frame_sd = defaultdict(list)
+
 i = 0
 for k,v in sorted(possible_starts.items()):
     n_mini_clips = len(v)
     mse_model_video = np.mean( (X_test[i:i+n_mini_clips, 1:] - X_hat[i:i+n_mini_clips, 1:])**2 ).item()
     mse_prev_video = np.mean( (X_test[i:i+n_mini_clips, :-1] - X_test[i:i+n_mini_clips, 1:])**2 ).item()
     mse_err_prev_video = np.mean( (X_hat[i:i+n_mini_clips, 1:-1] - X_hat[i:i+n_mini_clips, 2:])**2 ).item()
+
+    mse_model_video_sd = np.std( (X_test[i:i+n_mini_clips, 1:] - X_hat[i:i+n_mini_clips, 1:])**2 ).item()
+    mse_prev_video_sd = np.std( (X_test[i:i+n_mini_clips, :-1] - X_test[i:i+n_mini_clips, 1:])**2 ).item()
+    mse_err_prev_video_sd = np.std( (X_hat[i:i+n_mini_clips, 1:-1] - X_hat[i:i+n_mini_clips, 2:])**2 ).item()
+
     for j in range(n_mini_clips):
         for z in range(1,nt):
             mse_model_frame[k].append(np.mean( (X_test[i+j, z, :] - X_hat[i+j, z, :])**2 ).item())
             mse_prev_frame[k].append(np.mean( (X_test[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
+
+            mse_model_frame_sd[k].append(np.std( (X_test[i+j, z, :] - X_hat[i+j, z, :])**2 ).item())
+            mse_prev_frame_sd[k].append(np.std( (X_test[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
+
             if z > 1:
                 mse_err_prev_frame[k].append(np.mean( (X_hat[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
+                mse_err_prev_frame_sd[k].append(np.sd( (X_hat[i+j, z-1, :] - X_test[i+j, z, :])**2 ).item())
     mse_videos[k] = (mse_model_video, mse_prev_video, mse_err_prev_video)
+    mse_videos_sd[k] = (mse_model_video_sd, mse_prev_video_sd, mse_err_prev_video_sd)
     i += n_mini_clips
 
 mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
 mse_prev = np.mean( (X_test[:, :-1] - X_test[:, 1:])**2 )
+
+mse_model_sd = np.std( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
+mse_prev_sd = np.std( (X_test[:, :-1] - X_test[:, 1:])**2 )
     
 with open(mse_videos_path, 'w') as fp:
     json.dump(mse_videos, fp, sort_keys=True, indent=4)
@@ -223,6 +252,19 @@ with open(mse_prev_frame_path, 'w') as fp:
 
 with open(mse_err_prev_frame_path, 'w') as fp:
     json.dump(mse_err_prev_frame, fp, sort_keys=True, indent=4)    
+
+with open(mse_videos_sd_path, 'w') as fp:
+    json.dump(mse_videos_sd, fp, sort_keys=True, indent=4)
+
+with open(mse_frame_sd_path, 'w') as fp:
+    json.dump(mse_model_frame_sd, fp, sort_keys=True, indent=4)
+
+with open(mse_prev_frame_sd_path, 'w') as fp:
+    json.dump(mse_prev_frame_sd, fp, sort_keys=True, indent=4)
+
+with open(mse_err_prev_frame_sd_path, 'w') as fp:
+    json.dump(mse_err_prev_frame_sd, fp, sort_keys=True, indent=4)    
+
 #np.save(Xhat_path, X_hat)
 #np.save(Xtest_path, X_test)
 
@@ -230,6 +272,8 @@ with open(mse_err_prev_frame_path, 'w') as fp:
 f = open(overall_mse_path, 'w')
 f.write("Model MSE: %f\n" % mse_model)
 f.write("\n Previous Frame MSE: %f" % mse_prev)
+f.write("Model SDE: %f\n" % mse_model_sd)
+f.write("\n Previous Frame SDE: %f" % mse_prev_sd)
 f.close()
 #compare_results(pred_save_path, X_test, X_hat, nt)
 make_error_plot(mse_model_frame, err_save_path)
