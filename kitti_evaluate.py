@@ -82,7 +82,7 @@ batch_size = 10
 nt = 20#20
 
 subdir_model = 'UCSDped1' #'UCSDped2'
-subdir_test = 'UCSDped1' ##'UCSDped1' 'UCSDped2' 'total' 
+subdir_test = 'UCSDped2' ##'UCSDped1' 'UCSDped2' 'total' 
 
 weights_file = os.path.join(WEIGHTS_DIR, subdir_model, 'prednet_ucsd_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, subdir_model, 'prednet_ucsd_model.json')
