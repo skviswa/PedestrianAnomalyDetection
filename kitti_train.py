@@ -56,7 +56,7 @@ batch_size = 4
 samples_per_epoch = 600# 900, 600, 250
 N_seq_val = 80#100, 80, 30  # number of sequences to use for validation
 old_learning_rate = 0.001
-new_learning_rate = 0.0004
+new_learning_rate = 0.003
 epoch_learning_rate_number = 28
 
 # Model parameters
