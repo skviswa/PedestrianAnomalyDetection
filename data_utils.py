@@ -5,6 +5,11 @@ from keras.preprocessing.image import Iterator
 
 # Data generator that creates sequences for input into PredNet.
 class SequenceGenerator(Iterator):
+    '''
+    Keras generator responsible for creating a multi-threaded iterator
+    that can feed batches of the dataset to the models for training/inference
+    Must implement the next method as it is an iterator
+    '''
     def __init__(self, data_file, source_file, nt,
                  batch_size=8, shuffle=False, seed=None,
                  output_mode='error', sequence_start_mode='all', N_seq=None,

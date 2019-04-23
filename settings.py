@@ -1,8 +1,8 @@
-# Where KITTI data will be saved if you run process_kitti.py
+# Where UCSD data will be saved if you run process.py
 # If you directly download the processed data, change to the path of the data.
-DATA_DIR = './ucsd_data/'#r'C:\Users\karth\Documents\GitHub\prednet\ucsd_data'
+DATA_DIR = './ucsd_data/'
 
-# Where model weights and config will be saved if you run kitti_train.py
+# Where model weights and config will be saved if you run train.py
 # If you directly download the trained weights, change to appropriate path.
 WEIGHTS_DIR = './model_ucsd_data/'
 

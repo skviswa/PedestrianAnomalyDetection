@@ -13,7 +13,7 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from kitti_settings import *
+from settings import *
 
 # Define loss as MAE of frame predictions after t=0
 # It doesn't make sense to compute loss on error representation, since the error isn't wrt ground truth when extrapolating.
