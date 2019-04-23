@@ -36,7 +36,7 @@ You can find example animations of the results at https://youtu.be/ueJi8Tfn-6E <
 This has been documented in the environment yaml file. This can be used to set up the environment as well. <br />
 Here is an example of how to update the current environment using conda distribution: <br />
 source activate myenv <br />
-conda env update -f=environment.yml
+conda env update -f=environment.yml <br />
 
 ##Development/IDEs
-Spyder(3.3 or above)
+Spyder(3.3 or above) <br />
