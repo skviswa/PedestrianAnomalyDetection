@@ -83,7 +83,7 @@ def compare_results(plot_save_dir, X_test, X_hat, nt):
         plt.savefig(os.path.join(plot_save_dir, 'plot_' + str(i) + '.png'))
         plt.clf()
 
-def make_error_plot(err_dict, err_save_dir):
+def make_error_plot(err_dict, err_save_dir, plot_type=1):
     '''
     Plot the error metrics over time by making use of this
     helper function
@@ -93,8 +93,12 @@ def make_error_plot(err_dict, err_save_dir):
             x = range(len(v))
             plt.step(x, v, color='r', alpha=0.2, where='post', label=k)
             plt.xlabel('Timestep for '+k)
-            plt.ylabel('MSE Error '+k)
-            plt.title("MSE Error plot")
+            if plot_type == 1:
+                plt.ylabel('MSE Error '+k)
+                plt.title("MSE Error plot")
+            elif plot_type == 2:
+                plt.ylabel('SD Error '+k)
+                plt.title("SD plot")
             plt.savefig(os.path.join(err_save_dir, k+'.png'), bbox_inches='tight')
             plt.clf()
             
@@ -164,6 +168,7 @@ def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
     err_prev_save_dir = 'prev_frame_plots'
     err_model_prev_save_dir = 'model_prev_frame_plots'
     sd_save_dir = 'sd_plots'
+    sd_prev_save_dir = 'sd_prev_frame_plots'
     psnr_save_dir = 'psnr_plots'
     
     now = datetime.now
@@ -195,6 +200,9 @@ def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
     
     if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, sd_save_dir)):
         os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, sd_save_dir))
+
+    if not os.path.exists(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, sd_prev_save_dir)):
+        os.mkdir(os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, sd_prev_save_dir))
         
     Xhat_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, Xhat_filename)
     Xtest_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, Xtest_filename)
@@ -219,6 +227,7 @@ def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
     err_model_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, err_model_prev_save_dir)
     
     sd_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, sd_save_dir)
+    sd_prev_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, sd_prev_save_dir)
     psnr_save_path = os.path.join(RESULTS_SAVE_DIR, subdir_test, folder_now, psnr_save_dir)
     
     if subdir_test == 'total':
@@ -335,10 +344,11 @@ def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
     make_error_plot(mse_model_frame, err_save_path)
     make_error_plot(mse_prev_frame, err_prev_save_path)
     make_error_plot(mse_err_prev_frame, err_model_prev_save_path)
-    make_error_plot(mse_model_frame_sd, sd_save_path)
+    make_error_plot(mse_model_frame_sd, sd_save_path, 2)
+    make_error_plot(mse_prev_frame_sd, sd_prev_save_path, 2)
     make_error_plot(psnr_model_frame, psnr_save_path)
 
 if __name__ == '__main__':
-    subdir_model = 'UCSDped2' 
-    subdir_test = 'UCSDped2'
+    subdir_model = 'total' 
+    subdir_test = 'total'
     run_evaluation(subdir_model, subdir_test)
