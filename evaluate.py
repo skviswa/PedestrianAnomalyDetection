@@ -106,7 +106,7 @@ def make_error_plot(err_dict, err_save_dir, plot_type=1):
 #batch_size = 10
 #nt = 10
 
-def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
+def run_evaluation(subdir_model, subdir_test, n_plot=20, batch_size=10, nt=10):
     '''
     This function runs the evalution of the trained deep learning network
     over the selected test dataset, calculates the various metrics such as
@@ -340,7 +340,7 @@ def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
     f.write("Previous Frame SDE: %f\n" % mse_prev_sd)
     f.close()
     
-    #compare_results(pred_save_path, X_test, X_hat, nt)
+    compare_results(pred_save_path, X_test, X_hat, nt)
     make_error_plot(mse_model_frame, err_save_path)
     make_error_plot(mse_prev_frame, err_prev_save_path)
     make_error_plot(mse_err_prev_frame, err_model_prev_save_path)
@@ -349,6 +349,6 @@ def run_evaluation(subdir_model, subdir_test, n_plot=40, batch_size=10, nt=10):
     make_error_plot(psnr_model_frame, psnr_save_path)
 
 if __name__ == '__main__':
-    subdir_model = 'total' 
-    subdir_test = 'total'
+    subdir_model = 'UCSDped1' 
+    subdir_test = 'UCSDped1'
     run_evaluation(subdir_model, subdir_test)
