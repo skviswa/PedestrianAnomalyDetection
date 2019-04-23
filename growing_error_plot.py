@@ -21,6 +21,7 @@ for i in range(1, 180,20):
     images_tif.remove('{0:03}'.format(i) + '.tif')
 
 
+# y is the array of differences between MSE per frame between the test and predicted video. 
 y = np.array([0.0002988535852637142, 
         0.00021216068125795573, 
         0.00021405999723356217, 
