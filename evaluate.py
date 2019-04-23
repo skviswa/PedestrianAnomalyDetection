@@ -88,19 +88,19 @@ def make_error_plot(err_dict, err_save_dir, plot_type=1):
     Plot the error metrics over time by making use of this
     helper function
     '''
-        for k, v in err_dict.items():
-            plt.figure(figsize=(10,10))
-            x = range(len(v))
-            plt.step(x, v, color='r', alpha=0.2, where='post', label=k)
-            plt.xlabel('Timestep for '+k)
-            if plot_type == 1:
-                plt.ylabel('MSE Error '+k)
-                plt.title("MSE Error plot")
-            elif plot_type == 2:
-                plt.ylabel('SD Error '+k)
-                plt.title("SD plot")
-            plt.savefig(os.path.join(err_save_dir, k+'.png'), bbox_inches='tight')
-            plt.clf()
+    for k, v in err_dict.items():
+        plt.figure(figsize=(10,10))
+        x = range(len(v))
+        plt.step(x, v, color='r', alpha=0.2, where='post', label=k)
+        plt.xlabel('Timestep for '+k)
+        if plot_type == 1:
+            plt.ylabel('MSE Error '+k)
+            plt.title("MSE Error plot")
+        elif plot_type == 2:
+            plt.ylabel('SD Error '+k)
+            plt.title("SD plot")
+        plt.savefig(os.path.join(err_save_dir, k+'.png'), bbox_inches='tight')
+        plt.clf()
             
 #n_plot = 40
 #batch_size = 10
