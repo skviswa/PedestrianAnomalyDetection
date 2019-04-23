@@ -57,7 +57,7 @@ def get_test_splits(subdir):
         source_list.sort()
     return im_list, source_list
 
-def compare_results(plot_save_dir, X_test, X_hat, nt):
+def compare_results(plot_save_dir, X_test, X_hat, nt, n_plot):
     '''
     This function plots a comparison of results produced by the
     deep learning model with the actual test frame to give us an idea
@@ -340,7 +340,7 @@ def run_evaluation(subdir_model, subdir_test, n_plot=20, batch_size=10, nt=10):
     f.write("Previous Frame SDE: %f\n" % mse_prev_sd)
     f.close()
     
-    compare_results(pred_save_path, X_test, X_hat, nt)
+    compare_results(pred_save_path, X_test, X_hat, nt, n_plot)
     make_error_plot(mse_model_frame, err_save_path)
     make_error_plot(mse_prev_frame, err_prev_save_path)
     make_error_plot(mse_err_prev_frame, err_model_prev_save_path)
