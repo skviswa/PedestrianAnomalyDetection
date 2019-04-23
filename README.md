@@ -38,5 +38,5 @@ Here is an example of how to update the current environment using conda distribu
 source activate myenv <br />
 conda env update -f=environment.yml <br />
 
-##Development/IDEs
+## Development/IDEs
 Spyder(3.3 or above) <br />
