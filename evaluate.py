@@ -349,6 +349,6 @@ def run_evaluation(subdir_model, subdir_test, n_plot=20, batch_size=10, nt=10):
     make_error_plot(psnr_model_frame, psnr_save_path)
 
 if __name__ == '__main__':
-    subdir_model = 'UCSDped1' 
-    subdir_test = 'UCSDped1'
+    subdir_model = 'UCSDped2' 
+    subdir_test = 'UCSDped2'
     run_evaluation(subdir_model, subdir_test)
